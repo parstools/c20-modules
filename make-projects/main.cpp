@@ -10,6 +10,7 @@ const int fields_per_class = 2;
 const int class_per_file = 2;
 const int count_A_files_perB = 2;
 const int count_B_files = 2;
+const int count_proj_files = 10;
 
 void gen_one_big_file(ostream &f) {
     f << "export module Funcs;" << endl;
@@ -100,6 +101,21 @@ void gen_file_sourceB(bool isModule, string dirName, int k) {
             gen_method(f,  false, "class_"+to_string(i), "method_"+to_string(j), j);
 }
 
+void gen_file_source_proj(bool isModule, string dirName, int k) {
+    ofstream f(dirName+'/'+"p"+to_string(k)+".cpp");
+    if (isModule) {
+        f << "export module p" << k << endl;
+        for (int i = 0; i < count_B_files; i++)
+            f << "import b" << i << endl;
+    } else {
+        for (int i = 0; i < count_B_files; i++)
+            f << "#include \"b" << i << ".h\"" << endl;
+    }
+    for (int i=0; i<class_per_file; i++)
+        for (int j=0; j<methods_per_class; j++)
+            gen_method(f,  false, "class_"+to_string(i), "method_"+to_string(j), j);
+}
+
 void gen_stdlib(bool isModule) {
     string dirName = "stdlib";
     if (isModule)
@@ -114,8 +130,31 @@ void gen_stdlib(bool isModule) {
     }
 }
 
+void gen_main(bool isModule, string dirName) {
+    ofstream f(dirName+'/'+"main.cpp");
+    if (isModule)
+        for (int i=0; i<count_proj_files; i++)
+            f << "import p"<<i<<";" << endl;
+    else
+        for (int i=0; i<count_B_files; i++)
+            f << "#include \"b"<<i<<"\""<< endl;
+    f << "int main(){}"<< endl;
+}
+
+void gen_proj(bool isModule) {
+    string dirName = "proj";
+    if (isModule)
+        dirName+='M';
+    boost::filesystem::create_directory(dirName);
+    for (int i=0; i < count_proj_files; i++)
+        gen_file_source_proj(isModule, dirName, i);
+    gen_main(isModule, dirName);
+}
+
 int main() {
     gen_stdlib(false);
     gen_stdlib(true);
+    gen_proj(false);
+    gen_proj(true);
     return 0;
 }
