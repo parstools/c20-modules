@@ -91,6 +91,14 @@ void gen_file_headerB(string dirName, int k) {
         gen_class_header(f,  false, "class_b"+to_string(k)+"_"+to_string(i));
 }
 
+void gen_file_headerP(string dirName, int k) {
+    ofstream f(dirName+'/'+"p"+to_string(k)+".h");
+    for (int i = 0; i < count_B_files; i++)
+        f << "#include \"b" << i << ".h\"" << endl;
+    for (int i=0; i<class_per_file; i++)
+        gen_class_header(f,  false, "class_p"+to_string(k)+"_"+to_string(i));
+}
+
 void gen_file_sourceB(bool isModule, string dirName, int k) {
     ofstream f(dirName+'/'+"b"+to_string(k)+".cpp");
     if (isModule)
@@ -108,12 +116,11 @@ void gen_file_source_proj(bool isModule, string dirName, int k) {
         for (int i = 0; i < count_B_files; i++)
             f << "import b" << i << endl;
     } else {
-        for (int i = 0; i < count_B_files; i++)
-            f << "#include \"b" << i << ".h\"" << endl;
+        f << "#include \"p" << k << ".h\"" << endl;
     }
     for (int i=0; i<class_per_file; i++)
         for (int j=0; j<methods_per_class; j++)
-            gen_method(f,  false, "class_"+to_string(i), "method_"+to_string(j), j);
+            gen_method(f,  false, "class_p"+to_string(k)+"_"+to_string(i), "method_"+to_string(j), j);
 }
 
 void genLibCmake(string dirName, bool isModule) {
@@ -138,6 +145,35 @@ void genLibCmake(string dirName, bool isModule) {
     f << ")"<<endl;
 }
 
+void genExecCmake(string dirName, bool isModule) {
+    ofstream f(dirName+'/'+"CMakeLists.txt");
+    string projName = "exec";
+    string minVer;
+    if (isModule) {
+        minVer = "3.26";
+        projName += 'M';
+    }
+    else minVer = "3.20";
+
+    f << "cmake_minimum_required(VERSION "<<minVer<<")" << endl;
+    f << "project("<<projName<<")"<<endl;
+    if (isModule)
+        f << "set(CMAKE_CXX_STANDARD 11)"<<endl;
+    else
+        f << "set(CMAKE_CXX_STANDARD 20)"<<endl;
+
+    f << "include_directories(../stdlib)" << endl;
+    f << "link_directories(../stdlib)" << endl;
+
+    f << "add_executable(${PROJECT_NAME}"<<endl;
+    f << "  main.cpp"<<endl;
+    for (int i=0; i<count_proj_files; i++)
+        f << "  p"<<i<<".cpp"<<endl;
+    f << ")"<<endl;
+    f << "target_link_libraries(${PROJECT_NAME} stdlib)" << endl;
+}
+
+
 void gen_stdlib(bool isModule) {
     string dirName = "stdlib";
     if (isModule)
@@ -160,7 +196,7 @@ void gen_main(bool isModule, string dirName) {
             f << "import p"<<i<<";" << endl;
     else
         for (int i=0; i<count_B_files; i++)
-            f << "#include \"b"<<i<<"\""<< endl;
+            f << "#include \"b"<<i<<".h\""<< endl;
     f << "int main(){}"<< endl;
 }
 
@@ -169,9 +205,18 @@ void gen_proj(bool isModule) {
     if (isModule)
         dirName+='M';
     boost::filesystem::create_directory(dirName);
-    for (int i=0; i < count_proj_files; i++)
+    for (int i=0; i < count_proj_files; i++) {
+        gen_file_headerP(dirName, i);
         gen_file_source_proj(isModule, dirName, i);
+    }
     gen_main(isModule, dirName);
+    genExecCmake(dirName, isModule);
+}
+
+void gen_main_cmake() {
+    ofstream f("CMakeLists.txt");
+    f<<"add_subdirectory(stdlib)"<<endl;
+    f<<"add_subdirectory(proj)"<<endl;
 }
 
 int main() {
@@ -179,5 +224,6 @@ int main() {
     gen_stdlib(true);
     gen_proj(false);
     gen_proj(true);
+    gen_main_cmake();
     return 0;
 }
