@@ -36,14 +36,14 @@ void gen_method_declaration(ostream &f,bool export_, string methodName) {
 void gen_method(ostream &f,bool export_, string className, string methodName, int k) {
     if (export_)
         f << "export ";
-    f << "int " << className << "::" << methodName << "(int n);" << endl;
+    f << "int " << className << "::" << methodName << "(int n)" << endl;
     gen_method_body(f,k);
 }
 
 void gen_method_inline(ostream &f, bool export_,string methodName, int k) {
     if (export_)
         f << "export ";
-    f << "int " <<  methodName << "(int n);" << endl;
+    f << "int " <<  methodName << "(int n)" << endl;
     gen_method_body(f,k);
 }
 
@@ -59,7 +59,7 @@ void gen_fields(ostream &f, bool export_) {
 void gen_class_header(ostream &f, bool export_, string className) {
     if (export_)
         f << "export ";
-    f << className << "{" << endl;
+    f << "class " << className << " {" << endl;
     gen_fields(f, export_);
     for (int i=0; i<methods_per_class; i++)
         gen_method_declaration(f, export_, "method_"+to_string(i));
@@ -69,7 +69,7 @@ void gen_class_header(ostream &f, bool export_, string className) {
 void gen_class_inline(ostream &f, bool export_, string className) {
     if (export_)
         f << "export ";
-    f << className << "{" << endl;
+    f << "class " << className << " {" << endl;
     gen_fields(f, export_);
     for (int i=0; i<methods_per_class; i++)
         gen_method_inline(f, export_, "method_"+to_string(i) ,i);
@@ -80,7 +80,7 @@ void gen_class_inline(ostream &f, bool export_, string className) {
 void gen_file_inlineA(string dirName, int k) {
     ofstream f(dirName+'/'+"a"+to_string(k)+".h");
     for (int i=0; i<class_per_file; i++)
-        gen_class_inline(f,  false, "class_"+to_string(i));
+        gen_class_inline(f,  false, "class_a"+to_string(k)+"_"+to_string(i));
 }
 
 void gen_file_headerB(string dirName, int k) {
@@ -88,7 +88,7 @@ void gen_file_headerB(string dirName, int k) {
     for (int i=0; i<count_A_files_perB; i++)
         f << "#include \"a" << k*count_A_files_perB+ i <<".h\"" <<endl;
     for (int i=0; i<class_per_file; i++)
-        gen_class_header(f,  false, "class_"+to_string(i));
+        gen_class_header(f,  false, "class_b"+to_string(k)+"_"+to_string(i));
 }
 
 void gen_file_sourceB(bool isModule, string dirName, int k) {
@@ -98,7 +98,7 @@ void gen_file_sourceB(bool isModule, string dirName, int k) {
     f << "#include \"b"<<k<<".h\"" <<endl;
     for (int i=0; i<class_per_file; i++)
         for (int j=0; j<methods_per_class; j++)
-            gen_method(f,  false, "class_"+to_string(i), "method_"+to_string(j), j);
+            gen_method(f,  false, "class_b"+to_string(k)+"_"+to_string(i), "method_"+to_string(j), j);
 }
 
 void gen_file_source_proj(bool isModule, string dirName, int k) {
@@ -116,6 +116,28 @@ void gen_file_source_proj(bool isModule, string dirName, int k) {
             gen_method(f,  false, "class_"+to_string(i), "method_"+to_string(j), j);
 }
 
+void genLibCmake(string dirName, bool isModule) {
+    ofstream f(dirName+'/'+"CMakeLists.txt");
+    string projName = "stdlib";
+    string minVer;
+    if (isModule) {
+        minVer = "3.26";
+        projName += 'M';
+    }
+    else minVer = "3.20";
+
+    f << "cmake_minimum_required(VERSION "<<minVer<<")" << endl;
+    f << "project("<<projName<<")"<<endl;
+    if (isModule)
+        f << "set(CMAKE_CXX_STANDARD 11)"<<endl;
+    else
+        f << "set(CMAKE_CXX_STANDARD 20)"<<endl;
+    f << "add_library(${PROJECT_NAME} STATIC"<<endl;
+    for (int i=0; i<count_B_files; i++)
+        f << "  b"<<i<<".cpp"<<endl;
+    f << ")"<<endl;
+}
+
 void gen_stdlib(bool isModule) {
     string dirName = "stdlib";
     if (isModule)
@@ -128,6 +150,7 @@ void gen_stdlib(bool isModule) {
             gen_file_inlineA(dirName, i*count_A_files_perB+j);
         }
     }
+    genLibCmake(dirName, isModule);
 }
 
 void gen_main(bool isModule, string dirName) {
