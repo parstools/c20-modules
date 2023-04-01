@@ -53,7 +53,6 @@
 ###############################################################
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12.2)
-PROJECT(antlr4cpp_fetcher CXX)
 INCLUDE(ExternalProject)
 
 INCLUDE(cmake/FunExpr.cmake)
@@ -147,6 +146,19 @@ macro(antlr4cpp_process_grammar
 
 endmacro()
 
+function(antlr4cpp_process_grammar1 ARGS)
+  set(result "${result} John")
+  set(result "${result} Doe")
+  return_(${result})
+endfunction()
+
+function(createList ARGS)
+#AddToListFromFunction(MyTests MyBinary1 )
+#AddToListFromFunction(MyTests MyBinary2 )
+#AddToListFromFunction(MyTests MyBinary3 )
+  set(a "MyTests aaa")
+  return_(a)
+endfunction()
 
 macro(antlr4cpp_process_grammar_one
     antlr4cpp_project

@@ -39,18 +39,6 @@ function(format_name ARGS first last)
     return_("First: ${first}, last: ${last}")
 endfunction()
 
-function(get_first_name ARGS)
-    return_("John")          # return quoted
-endfunction()
-
-function(get_last_name ARGS)
-    return_(Doe)             # return unquoted
-endfunction()
-
-function(get_first_and_last ARGS)
-    return_([[John]] Doe)    # return list
-endfunction()
-
 #from https://stackoverflow.com/questions/22487215/return-a-list-from-the-function-using-out-parameter
 function(AddToListFromFunction OutVariable Element )
     if ("${${OutVariable}}" STREQUAL "")

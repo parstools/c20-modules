@@ -1,5 +1,6 @@
 # minimum required CMAKE version
 CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
+PROJECT(parser)
 
 SET (CMAKE_CXX_STANDARD 17)
 
@@ -20,6 +21,13 @@ antlr4cpp_process_grammar_one(demo cmake_parser
 antlr4cpp_process_grammar(demo cpp_parser
   ${CMAKE_CURRENT_SOURCE_DIR}/CPP14Lexer.g4
   ${CMAKE_CURRENT_SOURCE_DIR}/CPP14Parser.g4)
+
+fun_expr(NAME antlr4cpp_process_grammar1())
+message(WARNING ${NAME})
+separate_arguments(out UNIX_COMMAND ${NAME})
+foreach(generated_file ${out})
+    message(STATUS "MyTests Variable:  ${generated_file}")
+endforeach(generated_file)
 
 # add generated grammar to demo binary target
 add_executable(cmake_parser main.cpp ${antlr4cpp_src_files_cmake_parser})
