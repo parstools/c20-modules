@@ -14,15 +14,14 @@ include_directories( thirdparty/cpp_runtime/runtime/src )
 link_directories( thirdparty/cpp_runtime/dist )
 message(STATUS "Found antlr4cpp libs: ${ANTLR4CPP_LIBS} and includes: ${ANTLR4CPP_INCLUDE_DIRS} ")
 
-# Call macro to add lexer and grammar to your build dependencies.
-antlr4cpp_process_grammar(demo antlrcpptest
-  ${CMAKE_CURRENT_SOURCE_DIR}/TLexer.g4
-  ${CMAKE_CURRENT_SOURCE_DIR}/TParser.g4)
+# Call macro to add grammar to your build dependencies.
+antlr4cpp_process_grammar_one(demo cmake_parser
+  ${CMAKE_CURRENT_SOURCE_DIR}/CMake.g4)
+
 # include generated files in project environment
-include_directories(${antlr4cpp_include_dirs_antlrcpptest})
-MESSAGE(warning ${antlr4cpp_include_dirs_antlrcpptest})
+include_directories(${antlr4cpp_include_dirs_cmake_parser})
 
 # add generated grammar to demo binary target
-add_executable(test_antlr main.cpp ${antlr4cpp_src_files_antlrcpptest})
-add_dependencies(test_antlr antlr4cpp_generation_antlrcpptest)
-target_link_libraries(test_antlr antlr4-runtime)
+add_executable(cmake_parser main.cpp ${antlr4cpp_src_files_cmake_parser})
+add_dependencies(cmake_parser antlr4cpp_generation_cmake_parser)
+target_link_libraries(cmake_parser antlr4-runtime)
