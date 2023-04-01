@@ -88,28 +88,10 @@ endforeach(src_path)
 
 set(ANTLR4CPP_LIBS "${INSTALL_DIR}/lib")
 
-# antlr4_shared ${INSTALL_DIR}/lib/libantlr4-runtime.so
-# antlr4_static ${INSTALL_DIR}/lib/libantlr4-runtime.a
-
-############ Generate runtime #################
-# macro to add dependencies to target
-#
-# Param 1 project name
-# Param 1 namespace (postfix for dependencies)
-# Param 2 Lexer file (full path)
-# Param 3 Parser File (full path)
-#
-# output
-#
-# antlr4cpp_src_files_{namespace} - src files for add_executable
-# antlr4cpp_include_dirs_{namespace} - include dir for generated headers
-# antlr4cpp_generation_{namespace} - for add_dependencies tracking
-
-macro(antlr4cpp_process_grammar
-    antlr4cpp_project_namespace
-    antlr4cpp_grammar_lexer
-    antlr4cpp_grammar_parser)
-
+function(antlr4cpp_process_grammar ARGS
+        antlr4cpp_project_namespace
+        antlr4cpp_grammar_lexer
+        antlr4cpp_grammar_parser)
   if(EXISTS "${ANTLR4CPP_JAR_LOCATION}")
     message(STATUS "Found antlr tool: ${ANTLR4CPP_JAR_LOCATION}")
   else()
@@ -128,28 +110,23 @@ macro(antlr4cpp_process_grammar
   # Find all the input files
   FILE(GLOB generated_files ${ANTLR4CPP_GENERATED_SRC_DIR}/${antlr4cpp_project_namespace}/*.cpp)
 
+  set(result "")
   # export generated cpp files into list
   foreach(generated_file ${generated_files})
-    list(APPEND antlr4cpp_src_files_${antlr4cpp_project_namespace} ${generated_file})
+    #list(APPEND antlr4cpp_src_files_${antlr4cpp_project_namespace} ${generated_file})
+    set(result "${result} ${generated_file}")
     set_source_files_properties(
-      ${generated_file}
-      PROPERTIES
-      COMPILE_FLAGS -Wno-overloaded-virtual
-      )
+            ${generated_file}
+            PROPERTIES
+            COMPILE_FLAGS -Wno-overloaded-virtual
+    )
   endforeach(generated_file)
   message(STATUS "Antlr4Cpp  ${antlr4cpp_project_namespace} Generated: ${generated_files}")
 
   # export generated include directory
   set(antlr4cpp_include_dirs_${antlr4cpp_project_namespace} ${ANTLR4CPP_GENERATED_SRC_DIR}/${antlr4cpp_project_namespace})
   message(STATUS "Antlr4Cpp ${antlr4cpp_project_namespace} include: ${ANTLR4CPP_GENERATED_SRC_DIR}/${antlr4cpp_project_namespace}")
-
-endmacro()
-
-function(antlr4cpp_process_grammar1 ARGS
-        antlr4cpp_project_namespace
-        antlr4cpp_grammar_lexer
-        antlr4cpp_grammar_parser)
-  return_("aa bb cc dd")
+  return_(result)
 endfunction()
 
 macro(antlr4cpp_process_grammar_one

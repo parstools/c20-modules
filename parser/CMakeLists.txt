@@ -18,9 +18,6 @@ antlr4cpp_process_grammar_one(cmake_parser
   ${CMAKE_CURRENT_SOURCE_DIR}/CMake.g4)
 
 # Call macro to add lexer and grammar to your build dependencies.
-antlr4cpp_process_grammar(cpp_parser
-  ${CMAKE_CURRENT_SOURCE_DIR}/CPP14Lexer.g4
-  ${CMAKE_CURRENT_SOURCE_DIR}/CPP14Parser.g4)
 
 function(get_arguments_cpp ARGS)
     set(VAR cpp_parser
@@ -29,15 +26,7 @@ function(get_arguments_cpp ARGS)
     return_(${VAR})
 endfunction()
 
-fun_expr(NAME antlr4cpp_process_grammar1(get_arguments_cpp()))
-#fun_expr(NAME antlr4cpp_process_grammar1(cpp_parser
-#        ${CMAKE_CURRENT_SOURCE_DIR}/CPP14Lexer.g4
-#        ${CMAKE_CURRENT_SOURCE_DIR}/CPP14Parser.g4))
-message(STATUS ${NAME})
-separate_arguments(out UNIX_COMMAND ${NAME})
-foreach(generated_file ${out})
-    message(STATUS "MyTests Variable:  ${generated_file}")
-endforeach(generated_file)
+fun_expr(NAME antlr4cpp_process_grammar(get_arguments_cpp()))
 
 # add generated grammar to demo binary target
 add_executable(cmake_parser main.cpp ${antlr4cpp_src_files_cmake_parser})
