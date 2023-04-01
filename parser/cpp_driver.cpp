@@ -8,7 +8,7 @@ using namespace cpp_parser;
 using namespace antlr4;
 
 int main(int , const char **) {
-    ANTLRInputStream input("CMAKE_MINIMUM_REQUIRED(VERSION 3.5)");
+    ANTLRInputStream input("int main(){}");
     CPP14Lexer lexer(&input);
     CommonTokenStream tokens(&lexer);
 
