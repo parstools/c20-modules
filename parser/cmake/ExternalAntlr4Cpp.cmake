@@ -146,7 +146,23 @@ macro(antlr4cpp_process_grammar
 
 endmacro()
 
-function(antlr4cpp_process_grammar1 ARGS)
+function(format_name ARGS first med last)
+  return_("aa bb cc dd")
+endfunction()
+
+function(get_first_and_last ARGS)
+  #return_([[John2]] Doe2)    # return list
+  set(VAR a b c)
+  return_(${VAR})
+endfunction()
+
+function(antlr4cpp_process_grammar1
+        ARGS
+        antlr4cpp_project
+        antlr4cpp_project_namespace
+        antlr4cpp_grammar_lexer
+        antlr4cpp_grammar_parser
+        )
   set(result "${result} John")
   set(result "${result} Doe")
   return_(${result})

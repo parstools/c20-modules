@@ -22,7 +22,10 @@ antlr4cpp_process_grammar(demo cpp_parser
   ${CMAKE_CURRENT_SOURCE_DIR}/CPP14Lexer.g4
   ${CMAKE_CURRENT_SOURCE_DIR}/CPP14Parser.g4)
 
-fun_expr(NAME antlr4cpp_process_grammar1())
+fun_expr(NAME format_name(get_first_and_last()))
+#fun_expr(NAME antlr4cpp_process_grammar1(demo cpp_parser
+#        ${CMAKE_CURRENT_SOURCE_DIR}/CPP14Lexer.g4
+#        ${CMAKE_CURRENT_SOURCE_DIR}/CPP14Parser.g4))
 message(WARNING ${NAME})
 separate_arguments(out UNIX_COMMAND ${NAME})
 foreach(generated_file ${out})

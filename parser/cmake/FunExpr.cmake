@@ -33,12 +33,6 @@ function(fun_expr ARGS)
     return_("${args}")
 endfunction()
 
-# Definitions from the blog post
-
-function(format_name ARGS first last)
-    return_("First: ${first}, last: ${last}")
-endfunction()
-
 #from https://stackoverflow.com/questions/22487215/return-a-list-from-the-function-using-out-parameter
 function(AddToListFromFunction OutVariable Element )
     if ("${${OutVariable}}" STREQUAL "")
