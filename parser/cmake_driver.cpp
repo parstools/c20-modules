@@ -1,8 +1,8 @@
 #include <iostream>
 
 #include "antlr4-runtime.h"
-#include "build/antlr4cpp_generated_src/cmake_parser/CMakeLexer.h"
-#include "build/antlr4cpp_generated_src/cmake_parser/CMakeParser.h"
+#include "CMakeLexer.h"
+#include "CMakeParser.h"
 
 using namespace cmake_parser;
 using namespace antlr4;
