@@ -77,7 +77,7 @@ endif()
 
 # default path for source files
 if (NOT ANTLR4CPP_GENERATED_SRC_DIR)
-  set(ANTLR4CPP_GENERATED_SRC_DIR ${CMAKE_BINARY_DIR}/antlr4cpp_generated_src)
+  set(ANTLR4CPP_GENERATED_SRC_DIR ${CMAKE_BINARY_DIR}/gen)
 endif()
 
 
@@ -98,7 +98,7 @@ function(antlr4cpp_process_grammar ARGS
     message(FATAL_ERROR "Unable to find antlr tool. ANTLR4CPP_JAR_LOCATION:${ANTLR4CPP_JAR_LOCATION}")
   endif()
 
-  add_custom_target("antlr4cpp_generation_${antlr4cpp_project_namespace}"
+  add_custom_target("gen_${antlr4cpp_project_namespace}"
     COMMAND
     ${CMAKE_COMMAND} -E make_directory ${ANTLR4CPP_GENERATED_SRC_DIR}
     COMMAND
@@ -126,7 +126,7 @@ function(antlr4cpp_process_grammar ARGS
   # export generated include directory
   set(antlr4cpp_include_dirs_${antlr4cpp_project_namespace} ${ANTLR4CPP_GENERATED_SRC_DIR}/${antlr4cpp_project_namespace})
   message(STATUS "Antlr4Cpp ${antlr4cpp_project_namespace} include: ${ANTLR4CPP_GENERATED_SRC_DIR}/${antlr4cpp_project_namespace}")
-  return_(result)
+  return_(${result})
 endfunction()
 
 macro(antlr4cpp_process_grammar_one
@@ -139,7 +139,7 @@ macro(antlr4cpp_process_grammar_one
     message(FATAL_ERROR "Unable to find antlr tool. ANTLR4CPP_JAR_LOCATION:${ANTLR4CPP_JAR_LOCATION}")
   endif()
 
-  add_custom_target("antlr4cpp_generation_${antlr4cpp_project_namespace}"
+  add_custom_target("gen_${antlr4cpp_project_namespace}"
     COMMAND
     ${CMAKE_COMMAND} -E make_directory ${ANTLR4CPP_GENERATED_SRC_DIR}
     COMMAND

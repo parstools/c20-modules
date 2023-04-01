@@ -26,18 +26,20 @@ function(get_arguments_cpp ARGS)
     return_(${VAR})
 endfunction()
 
-fun_expr(NAME antlr4cpp_process_grammar(get_arguments_cpp()))
+fun_expr(generated_files_cpp_space antlr4cpp_process_grammar(get_arguments_cpp()))
+
+separate_arguments(generated_files_cpp UNIX_COMMAND ${generated_files_cpp_space})
 
 # add generated grammar to demo binary target
-add_executable(cmake_parser main.cpp ${antlr4cpp_src_files_cmake_parser})
-# include generated files in project environment
-target_include_directories(cmake_parser PRIVATE ${antlr4cpp_include_dirs_cmake_parser})
-add_dependencies(cmake_parser antlr4cpp_generation_cmake_parser)
-target_link_libraries(cmake_parser antlr4-runtime)
+#add_executable(cmake_parser cmake_driver.cpp ${generated_files_cmake})
+## include generated files in project environment
+#target_include_directories(cmake_parser PRIVATE ${ANTLR4CPP_INCLUDE_DIRS} ${antlr4cpp_include_dirs_cmake_parser})
+#add_dependencies(cmake_parser gen_cmake_parser)
+#target_link_libraries(cmake_parser antlr4-runtime)
 
 # add generated grammar to demo binary target
-add_executable(cpp_parser main.cpp ${antlr4cpp_src_files_cmake_parser})
+add_executable(cpp_parser main.cpp ${generated_files_cpp})
 # include generated files in project environment
-target_include_directories(cpp_parser PRIVATE ${antlr4cpp_include_dirs_cpp_parser})
-add_dependencies(cpp_parser antlr4cpp_generation_cpp_parser)
+target_include_directories(cpp_parser PRIVATE ${ANTLR4CPP_INCLUDE_DIRS} ${antlr4cpp_include_dirs_cpp_parser})
+add_dependencies(cpp_parser gen_cpp_parser)
 target_link_libraries(cpp_parser antlr4-runtime)
