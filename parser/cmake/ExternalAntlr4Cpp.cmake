@@ -80,12 +80,6 @@ if (NOT ANTLR4CPP_GENERATED_SRC_DIR)
   set(ANTLR4CPP_GENERATED_SRC_DIR ${CMAKE_BINARY_DIR}/gen)
 endif()
 
-
-list(APPEND ANTLR4CPP_INCLUDE_DIRS ${INSTALL_DIR}/include/antlr4-runtime)
-foreach(src_path misc atn dfa tree support)
-  list(APPEND ANTLR4CPP_INCLUDE_DIRS ${INSTALL_DIR}/include/antlr4-runtime/${src_path})
-endforeach(src_path)
-
 set(ANTLR4CPP_LIBS "${INSTALL_DIR}/lib")
 
 function(antlr4cpp_process_grammar ARGS
@@ -122,10 +116,6 @@ function(antlr4cpp_process_grammar ARGS
     )
   endforeach(generated_file)
   message(STATUS "Antlr4Cpp  ${antlr4cpp_project_namespace} Generated: ${generated_files}")
-
-  # export generated include directory
-  set(antlr4cpp_include_dirs_${antlr4cpp_project_namespace} ${ANTLR4CPP_GENERATED_SRC_DIR}/${antlr4cpp_project_namespace})
-  message(STATUS "Antlr4Cpp ${antlr4cpp_project_namespace} include: ${ANTLR4CPP_GENERATED_SRC_DIR}/${antlr4cpp_project_namespace}")
   return_(${result})
 endfunction()
 
@@ -161,9 +151,4 @@ macro(antlr4cpp_process_grammar_one
       )
   endforeach(generated_file)
   message(STATUS "Antlr4Cpp  ${antlr4cpp_project_namespace} Generated: ${generated_files}")
-
-  # export generated include directory
-  set(antlr4cpp_include_dirs_${antlr4cpp_project_namespace} ${ANTLR4CPP_GENERATED_SRC_DIR}/${antlr4cpp_project_namespace})
-  message(STATUS "Antlr4Cpp ${antlr4cpp_project_namespace} include: ${ANTLR4CPP_GENERATED_SRC_DIR}/${antlr4cpp_project_namespace}")
-
 endmacro()

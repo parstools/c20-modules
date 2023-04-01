@@ -38,8 +38,8 @@ separate_arguments(generated_files_cpp UNIX_COMMAND ${generated_files_cpp_space}
 #target_link_libraries(cmake_parser antlr4-runtime)
 
 # add generated grammar to demo binary target
-add_executable(cpp_parser main.cpp ${generated_files_cpp})
+add_executable(cpp_parser cpp_driver.cpp ${generated_files_cpp})
 # include generated files in project environment
-target_include_directories(cpp_parser PRIVATE ${ANTLR4CPP_INCLUDE_DIRS} ${antlr4cpp_include_dirs_cpp_parser})
+target_include_directories(cpp_parser PRIVATE ${CMAKE_BINARY_DIR}/gen/cpp_parser)
 add_dependencies(cpp_parser gen_cpp_parser)
 target_link_libraries(cpp_parser antlr4-runtime)
