@@ -50,3 +50,15 @@ endfunction()
 function(get_first_and_last ARGS)
     return_([[John]] Doe)    # return list
 endfunction()
+
+#from https://stackoverflow.com/questions/22487215/return-a-list-from-the-function-using-out-parameter
+function(AddToListFromFunction OutVariable Element )
+    if ("${${OutVariable}}" STREQUAL "")
+        message(STATUS "1")
+        set(${OutVariable} ${Element} PARENT_SCOPE)
+        message(STATUS "OutVariable: ${OutVariable} ${${OutVariable}}")
+    else ()
+        message(STATUS "2")
+        set(${OutVariable} "${${OutVariable}}" "${Element}" PARENT_SCOPE)
+    endif ()
+endfunction()

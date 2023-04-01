@@ -55,6 +55,8 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12.2)
 PROJECT(antlr4cpp_fetcher CXX)
 INCLUDE(ExternalProject)
+
+INCLUDE(cmake/FunExpr.cmake)
 FIND_PACKAGE(Git REQUIRED)
 
 # only JRE required
