@@ -152,12 +152,6 @@ function(antlr4cpp_process_grammar1 ARGS
   return_("aa bb cc dd")
 endfunction()
 
-function(get_first_and_last ARGS)
-  #return_([[John2]] Doe2)    # return list
-  set(VAR a b c)
-  return_(${VAR})
-endfunction()
-
 macro(antlr4cpp_process_grammar_one
     antlr4cpp_project_namespace
     antlr4cpp_grammar_parser)
