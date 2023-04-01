@@ -106,7 +106,6 @@ set(ANTLR4CPP_LIBS "${INSTALL_DIR}/lib")
 # antlr4cpp_generation_{namespace} - for add_dependencies tracking
 
 macro(antlr4cpp_process_grammar
-    antlr4cpp_project
     antlr4cpp_project_namespace
     antlr4cpp_grammar_lexer
     antlr4cpp_grammar_parser)
@@ -158,7 +157,6 @@ endfunction()
 
 function(antlr4cpp_process_grammar1
         ARGS
-        antlr4cpp_project
         antlr4cpp_project_namespace
         antlr4cpp_grammar_lexer
         antlr4cpp_grammar_parser
@@ -177,7 +175,6 @@ function(createList ARGS)
 endfunction()
 
 macro(antlr4cpp_process_grammar_one
-    antlr4cpp_project
     antlr4cpp_project_namespace
     antlr4cpp_grammar_parser)
 

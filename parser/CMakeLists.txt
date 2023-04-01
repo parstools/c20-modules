@@ -14,16 +14,16 @@ link_directories( thirdparty/cpp_runtime/dist )
 message(STATUS "Found antlr4cpp libs: ${ANTLR4CPP_LIBS} and includes: ${ANTLR4CPP_INCLUDE_DIRS} ")
 
 # Call macro to add grammar to your build dependencies.
-antlr4cpp_process_grammar_one(demo cmake_parser
+antlr4cpp_process_grammar_one(cmake_parser
   ${CMAKE_CURRENT_SOURCE_DIR}/CMake.g4)
 
 # Call macro to add lexer and grammar to your build dependencies.
-antlr4cpp_process_grammar(demo cpp_parser
+antlr4cpp_process_grammar(cpp_parser
   ${CMAKE_CURRENT_SOURCE_DIR}/CPP14Lexer.g4
   ${CMAKE_CURRENT_SOURCE_DIR}/CPP14Parser.g4)
 
 fun_expr(NAME format_name(get_first_and_last()))
-#fun_expr(NAME antlr4cpp_process_grammar1(demo cpp_parser
+#fun_expr(NAME antlr4cpp_process_grammar1(cpp_parser
 #        ${CMAKE_CURRENT_SOURCE_DIR}/CPP14Lexer.g4
 #        ${CMAKE_CURRENT_SOURCE_DIR}/CPP14Parser.g4))
 message(WARNING ${NAME})
