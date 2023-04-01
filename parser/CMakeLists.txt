@@ -10,8 +10,8 @@ set(ANTLR4CPP_JAR_LOCATION ${PROJECT_SOURCE_DIR}/thirdparty/antlr/antlr-4.12.0-c
 # add external build for antlrcpp
 include( ExternalAntlr4Cpp )
 # add antrl4cpp artifacts to project environment
-include_directories( cpp_runtime/runtime/src )
-link_directories( cpp_runtime/dist )
+include_directories( thirdparty/cpp_runtime/runtime/src )
+link_directories( thirdparty/cpp_runtime/dist )
 message(STATUS "Found antlr4cpp libs: ${ANTLR4CPP_LIBS} and includes: ${ANTLR4CPP_INCLUDE_DIRS} ")
 
 # Call macro to add lexer and grammar to your build dependencies.
