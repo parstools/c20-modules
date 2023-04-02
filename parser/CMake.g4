@@ -10,37 +10,129 @@ https://cmake.org/cmake/help/v3.12/manual/cmake-language.7.html
 
 grammar CMake;
 
+options { caseInsensitive = true; }
+
 file_
-	: command_invocation* EOF
+	: command+ EOF
 	;
 
-command_invocation
-	: Identifier '(' (single_argument|compound_argument)* ')'
-	;
 
-single_argument
-	: Identifier | Unquoted_argument | Bracket_argument | Quoted_argument
-	;
+command
+    : block_command
+    | command_invocation
+    ;
 
-compound_argument
-	: '(' (single_argument|compound_argument)* ')'
-	;
+block_command
+    : BLOCK compound_argument command* 'ENDBLOCK' empty_argument
+    ;
 
-Identifier
-	: [A-Za-z_][A-Za-z0-9_]*
-	;
+if_command
+    : 'IF' condition command* ('ELSEIF' condition command*)*
+            ('ELSE' empty_argument command*)?
+            'ENDIF' empty_argument
+    ;
+
+condition
+    : LPARENT unary_condition (('AND'|'OR') unary_condition)* RPARENT
+    ;
+
+unary_condition
+    : binary_test
+    | 'NOT' unary_condition
+    ;
+
+binary_test
+    : unary_test (binary_test_operator unary_test)*
+    ;
+
+binary_test_operator
+    : 'EQUAL'
+    | 'LESS'
+    | 'LESS_EQUAL'
+    | 'GREATER'
+    | 'GREATER_EQUAL'
+    | 'STREQUAL'
+    | 'STRLESS'
+    | 'STRLESS_EQUAL'
+    | 'STRGREATER'
+    | 'STRGREATER_EQUAL'
+    | 'VERSION_EQUAL'
+    | 'VERSION_LESS'
+    | 'VERSION_LESS_EQUAL'
+    | 'VERSION_GREATER'
+    | 'VERSION_GREATER_EQUAL'
+    | 'PATH_EQUAL'
+    | 'MATCHES'
+    ;
+
+unary_test
+    : basic_expression
+    | unary_test_operator unary_test
+    | condition
+    ;
+
+unary_test_operator
+    :  'EXISTS'
+    |  'COMMAND'
+    |  'DEFINED'
+    ;
+
+basic_expression
+    : constant|variable|Quoted_argument|Unquoted_argument
+    ;
 
 Unquoted_argument
 	: (~[ \t\r\n()#"\\] | Escape_sequence)+
 	;
 
+constant
+    : Number
+    ;
+
+variable
+    : Identifier
+    ;
+
+empty_argument
+    : LPARENT RPARENT
+    ;
+
+command_invocation
+	: Identifier compound_argument
+	;
+
+single_argument
+	: Identifier | Bracket_argument | Quoted_argument
+	;
+
+compound_argument
+	: LPARENT (single_argument|compound_argument)* RPARENT
+	;
+
+get_value
+    : '$' '{' variable '}'
+    ;
+
+Number
+    : [0-9.]+
+	;
+
 Escape_sequence
-	: Escape_identity | Escape_encoded | Escape_semicolon
+	: Escape_Identifierity | Escape_encoded | Escape_semicolon
+	;
+
+
+BLOCK
+    : 'BLOCK'
+    ;
+
+Identifier
+	: [A-Z_][A-Z0-9_]*
 	;
 
 fragment
-Escape_identity
-	: '\\' ~[A-Za-z0-9;]
+Escape_Identifierity
+	: '\\' ~[A-Z0-9;]
 	;
 
 fragment
@@ -95,3 +187,6 @@ Space
 	: [ \t]+
 	-> skip
 	;
+
+LPARENT : '(';
+RPARENT : ')';
